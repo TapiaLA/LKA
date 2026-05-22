@@ -16,53 +16,61 @@ Antes de ejecutar el clúster, el servidor (Ubuntu Server o similar) debe contar
 Si se realizarán pruebas locales sin Docker, instalar las librerías base ejecutando:
 ```bash
 pip install -r requirements.txt
+```
+🚀 2. Despliegue Automatizado (Recomendado)
+Para facilitar el arranque del sistema con un solo comando, hemos incluido un script interactivo que inyecta las variables de entorno automáticamente.
 
-🐳 2. Inicialización del Clúster (Docker Swarm)
-Para que el servidor actúe como el nodo maestro (Manager) de nuestra arquitectura distribuida, inicializar el enjambre de contenedores con el siguiente comando:
+Paso 2.1: Otorgar permisos de ejecución
+Por única vez, otorga permisos al script lanzador:
 
-Bash
+```Bash
+chmod +x deploy.sh
+```
+Paso 2.2: Iniciar el clúster
+Ejecuta el script y sigue las instrucciones en pantalla para ingresar las credenciales de la cámara y la IP del hardware:
+
+```Bash
+./deploy.sh
+```
+🐳 3. Despliegue Manual (Docker Swarm)
+Si prefieres levantar la arquitectura paso a paso sin el script automatizado:
+
+Paso 3.1: Inicialización del Clúster
+Para que el servidor actúe como el nodo maestro (Manager), inicializa el enjambre:
+
+```Bash
 sudo docker swarm init
-(Nota: Guardar el token generado por la terminal si en el futuro se desean añadir nodos esclavos al procesamiento).
+```
+(Nota: Guarda el token generado si deseas añadir nodos Worker al procesamiento).
 
-🚀 3. Despliegue del Nodo de Visión
-El despliegue se divide en dos pasos: construir la imagen empaquetando nuestras librerías y ejecutar el contenedor haciendo un puente (volumen) para salvar nuestras fotografías.
+Paso 3.2: Construir la imagen de Docker
 
-Paso 3.1: Construir la imagen de Docker
-Ejecutar este comando estando dentro de la carpeta del proyecto:
-
-Bash
+```Bash
 sudo docker build -t lka-vision .
-Paso 3.2: Arrancar el contenedor
-Este comando lanza el sistema, expone el puerto 5000 para Flask y crea el túnel de persistencia de datos para el Data Warehouse:
+```
+Paso 3.3: Arrancar el contenedor
+Este comando lanza el sistema, expone el puerto para Flask y crea el túnel de persistencia de datos para el Data Warehouse:
 
-Bash
+```Bash
 sudo docker run -d \
   --name nodo-vision \
   -p 5000:5000 \
   -v $(pwd)/data_warehouse:/app/data_warehouse \
   lka-vision
-📡 5. Monitoreo y Telemetría en Vivo
+  ```
+📡 4. Monitoreo y Telemetría en Vivo
 Una vez que el contenedor esté corriendo (sudo docker ps para confirmar), el sistema comenzará a procesar el video y a registrar la metadata automáticamente.
 
-Para acceder al sistema desde cualquier dispositivo (teléfono o PC) conectado a la misma red Wi-Fi, abre el navegador y dirígete a:
+Para acceder al sistema desde cualquier dispositivo conectado a la misma red Wi-Fi, abre el navegador y dirígete a:
 
 📷 Cámara y Detecciones en Vivo: http://<IP_DEL_SERVIDOR>:5000/video
 
 📊 Data Warehouse (JSON en tiempo real): http://<IP_DEL_SERVIDOR>:5000/telemetria
 
-🛑 Detener y Limpiar el Sistema
-Si necesitas apagar el nodo o actualizar el código, ejecuta:
+🛑 5. Detener y Limpiar el Sistema
+Si necesitas apagar el nodo o actualizar el código de visión, ejecuta:
 
-Bash
+```Bash
 sudo docker stop nodo-vision
 sudo docker rm nodo-vision
-
-3. Darle Permisos y Ejecutarlo
-Para que Ubuntu te permita correr este archivo interactivo, debes darle permisos de ejecución por única vez. En tu terminal escribe:
-
-Bash
-chmod +x deploy.sh
-¡Y listo! De ahora en adelante, todo el proyecto se arranca simplemente escribiendo esto en la terminal:
-
-Bash
-./deploy.sh
+```
