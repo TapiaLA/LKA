@@ -1,0 +1,18 @@
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+env/
+
+# Base de datos y metadatos locales (¡MUY IMPORTANTE NO SUBIR ESTO!)
+data_warehouse/
+
+# Variables de entorno o configuraciones locales
+.env
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
