@@ -17,7 +17,7 @@ AMARILLO_BAJO = np.array([15, 100, 100])
 AMARILLO_ALTO = np.array([30, 255, 255])
 
 # IP de tu ESP32-CAM
-ESP32_IP = "192.168.0.142"
+ESP32_IP = "192.168.0."
 URL_VIDEO = f'http://LKA:12345678@{ESP32_IP}:8080/video'
 
 def procesar_vision():
